@@ -4,9 +4,9 @@ project(SPOON)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-set(SPN_LIB "${CMAKE_CURRENT_LIST_DIR}/Lib")
-set(SPN_SRC "${CMAKE_CURRENT_LIST_DIR}/Src")
-set(SPN_TOPDIR "${CMAKE_CURRENT_LIST_DIR}")
+set(SPN_LIB "${CMAKE_SOURCE_DIR}/Lib")
+set(SPN_SRC "${CMAKE_SOURCE_DIR}/Src")
+set(SPN_TOPDIR "${CMAKE_SOURCE_DIR}")
 
 include(FindOpenGL)
 find_package(OpenGL REQUIRED)

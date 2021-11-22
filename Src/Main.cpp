@@ -19,6 +19,22 @@ int main(int argc, char* argv[])
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
+    /* Load Test Model */
+    bool ret = loader.LoadASCIIFromFile(&model, &err, &warn, "Test.gltf");
+
+    if (!warn.empty()) {
+        printf("Warn: %s\n", warn.c_str());
+    }
+
+    if (!err.empty()) {
+        printf("Err: %s\n", err.c_str());
+    }
+
+    if (!ret) {
+        printf("Failed to parse glTF\n");
+        return -1;
+    }
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
