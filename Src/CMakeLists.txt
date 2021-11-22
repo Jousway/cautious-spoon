@@ -14,9 +14,15 @@ add_executable(${PROJECT_NAME}
 	${SPN_MAIN}
 )
 
+# I had to add GLU and GL here for Linux to compile.
+# Is that what this ${OPENGL_LIBRARIES} is supposed to do
+# for us? Not sure why it isn't working in that case...
+# ~Sudo
 target_link_libraries(${PROJECT_NAME} 
 	${OPENGL_LIBRARIES}
 	glfw
+	GLU
+	GL
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
