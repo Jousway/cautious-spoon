@@ -2,6 +2,9 @@
 
 
 GLFWwindow* Graphics::Initialize(int width, int height, const char* title, GLFWmonitor* monitor) {
+	ScreenWidth = static_cast<float>(width);
+	ScreenHeight = static_cast<float>(height);
+
 	window = glfwCreateWindow(width, height, title, monitor, NULL);
 	if (!window) {
 		glfwTerminate();
@@ -80,21 +83,21 @@ void Graphics::Destroy() {
 	glfwTerminate();
 }
 
-Quad Graphics::GenQuad(float X, float Y, float W, float H)
+void Graphics::GenQuad(std::string Name, int X, int Y, int W, int H)
 {
-	Quads.push_back(Quad(X, Y, W, H));
-	return Quads[Quads.size() - 1];
+	Quads.insert(std::make_pair(Name,Quad(X, Y, W, H)));
 }
 
 void Graphics::Update()
 {
-	for (auto& Q : Quads)
+	for (auto& quad : Quads)
 	{
+		auto& Q = quad.second;
 		std::vector<float> verts = {
-			Q.LocX, Q.LocY, 1.0f, 1.0f, 1.0f,
-			Q.LocX + Q.Width, Q.LocY, 1.0f, 1.0f, 1.0f,
-			Q.LocX + Q.Width, Q.LocY + Q.Height, 1.0f, 1.0f, 1.0f,
-			Q.LocX, Q.LocY + Q.Height, 1.0f, 1.0f, 1.0f
+			(-Q.Width + Q.LocX)/ScreenWidth, (-Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2],
+			(Q.Width + Q.LocX)/ScreenWidth, (-Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2],
+			(Q.Width + Q.LocX)/ScreenWidth, (Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2],
+			(-Q.Width + Q.LocX)/ScreenWidth, (Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2]
 		};
 		Buffer(GL_ARRAY_BUFFER, verts, GL_STREAM_DRAW);
 		std::vector<GLuint> elems = {

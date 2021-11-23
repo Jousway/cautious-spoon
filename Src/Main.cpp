@@ -87,8 +87,13 @@ int main(int argc, char* argv[])
 	*/
 
 
-	Quad qOne = display.GenQuad(-0.25f, -0.25f, 0.25f, 0.25f);
-	Quad qTwo = display.GenQuad(0.25f, 0.25f, 0.25f, 0.25f);
+	display.GenQuad("ID1", 200, 200, 200, 200);
+	display.GenQuad("ID2", -200, -200, 200, 200);
+	display.GenQuad("ID3", 200, -200, 200, 200);
+	display.GenQuad("ID4", -200, 200, 200, 200);
+	display.Quads["ID1"].Diffuse({ 1.f,0.f,0.f });
+	display.Quads["ID3"].Diffuse({ 0.f,1.f,0.f });
+	display.Quads["ID4"].Diffuse({ 0.f,0.f,1.f });
 
 
 	/* Create and compile shaders */
