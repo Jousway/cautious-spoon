@@ -9,14 +9,9 @@
 
 class Quad {
 public:
-	Quad(int X, int Y, int W, int H) : 
+	Quad(float X, float Y, float W, float H) : 
 		Width(W), Height(H), LocX(X), LocY(Y) {};
-
-private:
-	int Width;
-	int Height;
-	int LocX;
-	int LocY;
+	float Width, Height, LocX, LocY;
 };
 
 class Graphics {
@@ -32,14 +27,14 @@ class Graphics {
 
 		template<class A>
 		void Buffer(int Type, std::vector<A> input, GLenum drawType) {
-			printf("SIZE: %i\n", static_cast<int>(input.size() * sizeof(A)));
+			//printf("SIZE: %i\n", static_cast<int>(input.size() * sizeof(A)));
 			glBufferData(Type, input.size() * sizeof(A), input.data(), drawType);
 		}
 
 		GLuint CreateShader(GLenum shaderType, const GLchar* source);
 		void CompileShaders();
 		GLuint ConfigureProgram(GLuint vertShader, GLuint fragShader);
-		void GenQuad(int X, int Y, int W, int H);
+		Quad GenQuad(float X, float Y, float W, float H);
 		void Update();
 		void BeginDraw();
 		void EndDraw();

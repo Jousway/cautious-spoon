@@ -80,15 +80,28 @@ void Graphics::Destroy() {
 	glfwTerminate();
 }
 
-void Graphics::GenQuad(int X, int Y, int W, int H)
+Quad Graphics::GenQuad(float X, float Y, float W, float H)
 {
 	Quads.push_back(Quad(X, Y, W, H));
+	return Quads[Quads.size() - 1];
 }
 
 void Graphics::Update()
 {
 	for (auto& Q : Quads)
 	{
-
+		std::vector<float> verts = {
+			Q.LocX, Q.LocY, 1.0f, 1.0f, 1.0f,
+			Q.LocX + Q.Width, Q.LocY, 1.0f, 1.0f, 1.0f,
+			Q.LocX + Q.Width, Q.LocY + Q.Height, 1.0f, 1.0f, 1.0f,
+			Q.LocX, Q.LocY + Q.Height, 1.0f, 1.0f, 1.0f
+		};
+		Buffer(GL_ARRAY_BUFFER, verts, GL_STREAM_DRAW);
+		std::vector<GLuint> elems = {
+			0, 1, 2,
+			2, 3, 0
+		};
+		Buffer(GL_ELEMENT_ARRAY_BUFFER, elems, GL_STREAM_DRAW);
+		glDrawElements(GL_TRIANGLES, elems.size() * sizeof(GLuint), GL_UNSIGNED_INT, 0);
 	}
 }

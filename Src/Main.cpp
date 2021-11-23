@@ -67,6 +67,7 @@ int main(int argc, char* argv[])
 
 
 	/* Set up vertices */
+	/*
 	std::vector<float> vertices = {
 		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
 		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
@@ -74,13 +75,21 @@ int main(int argc, char* argv[])
 		-0.5f, -0.5f, 1.0f, 1.0f, 1.0f
 	};
 	display.Buffer(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+	*/
 
 	/* Set up elements */
+	/*
 	std::vector<GLuint> elements = {
 		0, 1, 2,
 		2, 3, 0
 	};
 	display.Buffer(GL_ELEMENT_ARRAY_BUFFER, elements, GL_STATIC_DRAW);
+	*/
+
+
+	Quad qOne = display.GenQuad(-0.25f, -0.25f, 0.25f, 0.25f);
+	Quad qTwo = display.GenQuad(0.25f, 0.25f, 0.25f, 0.25f);
+
 
 	/* Create and compile shaders */
 	GLuint vertShader = display.CreateShader(GL_VERTEX_SHADER, vertSrc);
@@ -124,7 +133,7 @@ int main(int argc, char* argv[])
         display.BeginDraw();
 
 		/* i did it dad */
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		display.Update();
 
