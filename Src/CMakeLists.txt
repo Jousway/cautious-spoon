@@ -5,15 +5,18 @@ list(APPEND SPN_MAIN
 	#Headers
 	"Main.hpp"
 )
+
+source_group("Internal" FILES ${SPN_MAIN} )
+
 list(APPEND SPN_GFX
+	#Source
 	"Graphics.cpp"
+	
+	#Headers
 	"Graphics.hpp"
 )
 
-source_group("" FILES
-	${SPN_MAIN}
-	${SPN_GFX}
-)
+source_group("Internal/Graphics" FILES ${SPN_GFX} )
 
 #Main CMake
 
@@ -25,7 +28,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} 
 	${OPENGL_LIBRARIES}
 	glfw
-	GLEW
+	glew
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

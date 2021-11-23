@@ -14,5 +14,8 @@ find_package(OpenGL REQUIRED)
 add_subdirectory(Lib)
 add_subdirectory(Src)
 
+set_property(TARGET glew PROPERTY FOLDER "External Libraries")
+set_property(TARGET glfw PROPERTY FOLDER "External Libraries")
+
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 

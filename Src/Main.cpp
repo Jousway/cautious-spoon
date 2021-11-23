@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
 
 
     /* Load Test Model */
+	/*
     bool ret = loader.LoadASCIIFromFile(&model, &err, &warn, "Test.gltf");
 
     if (!warn.empty()) {
@@ -55,30 +56,31 @@ int main(int argc, char* argv[])
         printf("Failed to parse glTF\n");
         return -1;
     }
+	*/
 
 
 	/* Create buffer objects */
-	GLuint vao;
-	GLuint vbo;
-	GLuint ebo;
+	GLuint vao = 0;
+	GLuint vbo = 0;
+	GLuint ebo = 0;
 	display.Generate(vao, vbo, ebo);
 
 
 	/* Set up vertices */
-	float vertices[] = {
+	std::vector<float> vertices = {
 		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
 		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
 		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
 		-0.5f, -0.5f, 1.0f, 1.0f, 1.0f
 	};
-	display.BufferVBO(vertices, sizeof(vertices), GL_STATIC_DRAW);
+	display.Buffer(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
 	/* Set up elements */
-	GLuint elements[] = {
+	std::vector<GLuint> elements = {
 		0, 1, 2,
 		2, 3, 0
 	};
-	display.BufferEBO(elements, sizeof(elements), GL_STATIC_DRAW);
+	display.Buffer(GL_ELEMENT_ARRAY_BUFFER, elements, GL_STATIC_DRAW);
 
 	/* Create and compile shaders */
 	GLuint vertShader = display.CreateShader(GL_VERTEX_SHADER, vertSrc);

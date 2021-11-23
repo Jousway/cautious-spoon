@@ -28,21 +28,16 @@ void Graphics::Generate(GLuint vao, GLuint vbo, GLuint ebo) {
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 }
-void Graphics::BufferVBO(float *vertices, int size, GLenum drawType) {
-	glBufferData(GL_ARRAY_BUFFER, size, vertices, drawType);
-}
-void Graphics::BufferEBO(GLuint *elements, int size, GLenum drawType) {
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, elements, drawType);
-}
+
 GLuint Graphics::CreateShader(GLenum shaderType, const GLchar* source) {
 	GLuint shader = glCreateShader(shaderType);
 	glShaderSource(shader, 1, &source, NULL);
-	shaders[shaderCount++] = shader;
+	shaders.push_back(shader);
 	return shader;
 }
 void Graphics::CompileShaders() {
-	for (int i = 0; i < shaderCount; i++) {
-		GLuint shader = shaders[i];
+	for (auto& shader : shaders)
+	{
 		glCompileShader(shader);
 		GLint isCompiled = 0;
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
