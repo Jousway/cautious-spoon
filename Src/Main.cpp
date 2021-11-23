@@ -1,5 +1,5 @@
-#include "Window_OGL.hpp"
 #include "Main.hpp"
+#include "Graphics.hpp"
 
 /* Vertex shader */
 const GLchar* vertSrc = R"glsl(
@@ -71,14 +71,14 @@ int main(int argc, char* argv[])
 		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
 		-0.5f, -0.5f, 1.0f, 1.0f, 1.0f
 	};
-	display.BufferVBO(vertices, GL_STATIC_DRAW);
+	display.BufferVBO(vertices, sizeof(vertices), GL_STATIC_DRAW);
 
 	/* Set up elements */
 	GLuint elements[] = {
 		0, 1, 2,
 		2, 3, 0
 	};
-	display.BufferEBO(elements, GL_STATIC_DRAW);
+	display.BufferEBO(elements, sizeof(elements), GL_STATIC_DRAW);
 
 	/* Create and compile shaders */
 	GLuint vertShader = display.CreateShader(GL_VERTEX_SHADER, vertSrc);
@@ -86,14 +86,7 @@ int main(int argc, char* argv[])
 	display.CompileShaders();
 
 	/* Create program and attach shaders */
-	GLuint shaderProg = glCreateProgram();
-	glAttachShader(shaderProg, vertShader);
-	glAttachShader(shaderProg, fragShader);
-	/* Not necessary, but helps me remember when it would be */
-	glBindFragDataLocation(shaderProg, 0, "outColor");
-	/* Link and use program */
-	glLinkProgram(shaderProg);
-	glUseProgram(shaderProg);
+	GLuint shaderProg = display.ConfigureProgram(vertShader, fragShader);
 
 	/* Vert shader position */
 	GLint posAttrib = glGetAttribLocation(shaderProg, "position");
@@ -126,31 +119,18 @@ int main(int argc, char* argv[])
 		glUniform1f(uniTime, time);
 
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        display.BeginDraw();
 
 		/* i did it dad */
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        display.EndDraw();
 
         /* Poll for and process events */
-        glfwPollEvents();
+		display.PollEvents();
     }
 
-	/* Delete program */
-	glDeleteProgram(shaderProg);
-	/* Delete shaders */
-	glDeleteShader(fragShader);
-	glDeleteShader(vertShader);
-
-	/* Delete buffers */
-	glDeleteBuffers(1, &ebo);
-	glDeleteBuffers(1, &vbo);
-	/* Delete vertex arrays */
-	glDeleteVertexArrays(1, &vao);
-
-	/* Kill window and return 0 */
-    glfwTerminate();
+	display.Destroy();
     return 0;
 }

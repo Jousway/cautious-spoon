@@ -5,23 +5,21 @@ list(APPEND SPN_MAIN
 	#Headers
 	"Main.hpp"
 )
-list(APPEND SPN_CPP
-	"Window_OGL.cpp"
-)
-list(APPEND SPN_HPP
-	"Window_OGL.hpp"
+list(APPEND SPN_GFX
+	"Graphics.cpp"
+	"Graphics.hpp"
 )
 
 source_group("" FILES
 	${SPN_MAIN}
-	${SPN_CPP}
-	${SPN_HPP}
+	${SPN_GFX}
 )
 
 #Main CMake
 
 add_executable(${PROJECT_NAME}
 	${SPN_MAIN}
+	${SPN_GFX}
 )
 
 target_link_libraries(${PROJECT_NAME} 
