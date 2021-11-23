@@ -7,15 +7,24 @@
 #include <vector>
 #include <chrono>
 
+class Quad {
+public:
+	Quad(int X, int Y, int W, int H) : 
+		Width(W), Height(H), LocX(X), LocY(Y) {};
+
+private:
+	int Width;
+	int Height;
+	int LocX;
+	int LocY;
+};
+
 class Graphics {
 	private:
 		GLFWwindow* window;
-		GLuint VAO;
-		GLuint VBO;
-		GLuint EBO;
-		GLuint vert;
-		GLuint frag;
-		GLuint program;
+		GLuint VAO, VBO, EBO, vert, frag, program;
+
+		std::vector<Quad> Quads;
 		std::vector<GLuint> shaders;
 	public:
 		GLFWwindow* Initialize(int width, int height, const char* title, GLFWmonitor* monitor);
@@ -30,6 +39,8 @@ class Graphics {
 		GLuint CreateShader(GLenum shaderType, const GLchar* source);
 		void CompileShaders();
 		GLuint ConfigureProgram(GLuint vertShader, GLuint fragShader);
+		void GenQuad(int X, int Y, int W, int H);
+		void Update();
 		void BeginDraw();
 		void EndDraw();
 		void PollEvents();

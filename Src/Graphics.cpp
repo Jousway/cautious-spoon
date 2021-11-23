@@ -79,3 +79,16 @@ void Graphics::Destroy() {
 	/* Kill window */
 	glfwTerminate();
 }
+
+void Graphics::GenQuad(int X, int Y, int W, int H)
+{
+	Quads.push_back(Quad(X, Y, W, H));
+}
+
+void Graphics::Update()
+{
+	for (auto& Q : Quads)
+	{
+
+	}
+}

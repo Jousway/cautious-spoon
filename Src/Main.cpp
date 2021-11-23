@@ -126,6 +126,8 @@ int main(int argc, char* argv[])
 		/* i did it dad */
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+		display.Update();
+
         /* Swap front and back buffers */
         display.EndDraw();
 
