@@ -1,23 +1,44 @@
+#include "Window_OGL.hpp"
 #include "Main.hpp"
+
+/* Vertex shader */
+const GLchar* vertSrc = R"glsl(
+	#version 150 core
+	in vec2 position;
+	in vec3 color;
+	out vec3 Color;
+	void main() {
+		Color = color;
+		gl_Position = vec4(position, 0.0, 1.0);
+	}
+)glsl";
+/* Fragment shader */
+const GLchar* fragSrc = R"glsl(
+	#version 150 core
+	in vec3 Color;
+	out vec4 outColor;
+	uniform float time;
+	void main() {
+		float col = (sin(time * 4.0) + 1.0) / 2.0;
+		outColor = vec4(Color * col, 1.0);
+	}
+)glsl";
 
 int main(int argc, char* argv[])
 {
-    GLFWwindow* window;
 
     /* Initialize the library */
     if (!glfwInit())
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "SPOON", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
+    Graphics display;
+	GLFWwindow* window = display.Initialize(640, 480, "SPOON", NULL);
+    if (!window) {
+		printf("Unable to create window\n");
         return -1;
     }
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
 
     /* Load Test Model */
     bool ret = loader.LoadASCIIFromFile(&model, &err, &warn, "Test.gltf");
@@ -35,11 +56,80 @@ int main(int argc, char* argv[])
         return -1;
     }
 
+
+	/* Create buffer objects */
+	GLuint vao;
+	GLuint vbo;
+	GLuint ebo;
+	display.Generate(vao, vbo, ebo);
+
+
+	/* Set up vertices */
+	float vertices[] = {
+		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
+		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
+		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, 1.0f, 1.0f, 1.0f
+	};
+	display.BufferVBO(vertices, GL_STATIC_DRAW);
+
+	/* Set up elements */
+	GLuint elements[] = {
+		0, 1, 2,
+		2, 3, 0
+	};
+	display.BufferEBO(elements, GL_STATIC_DRAW);
+
+	/* Create and compile shaders */
+	GLuint vertShader = display.CreateShader(GL_VERTEX_SHADER, vertSrc);
+	GLuint fragShader = display.CreateShader(GL_FRAGMENT_SHADER, fragSrc);
+	display.CompileShaders();
+
+	/* Create program and attach shaders */
+	GLuint shaderProg = glCreateProgram();
+	glAttachShader(shaderProg, vertShader);
+	glAttachShader(shaderProg, fragShader);
+	/* Not necessary, but helps me remember when it would be */
+	glBindFragDataLocation(shaderProg, 0, "outColor");
+	/* Link and use program */
+	glLinkProgram(shaderProg);
+	glUseProgram(shaderProg);
+
+	/* Vert shader position */
+	GLint posAttrib = glGetAttribLocation(shaderProg, "position");
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+
+	/* Vert shader color */
+	GLint colAttrib = glGetAttribLocation(shaderProg, "color");
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+
+	/* Uniform time */
+	auto t_start = std::chrono::steady_clock::now();
+	auto t_now = std::chrono::steady_clock::now();
+	float time = std::chrono::duration_cast<std::chrono::duration<float>>(t_now - t_start).count();
+	GLint uniTime = glGetUniformLocation(shaderProg, "time");
+	glUniform1f(uniTime, 0.0f);
+
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+		/* Check escape key press */
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			glfwSetWindowShouldClose(window, GL_TRUE);
+		
+		/* Refresh uniform time */
+		t_now = std::chrono::steady_clock::now();
+		time = std::chrono::duration_cast<std::chrono::duration<float>>(t_now - t_start).count();
+		glUniform1f(uniTime, time);
+
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
+
+		/* i did it dad */
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -48,6 +138,19 @@ int main(int argc, char* argv[])
         glfwPollEvents();
     }
 
+	/* Delete program */
+	glDeleteProgram(shaderProg);
+	/* Delete shaders */
+	glDeleteShader(fragShader);
+	glDeleteShader(vertShader);
+
+	/* Delete buffers */
+	glDeleteBuffers(1, &ebo);
+	glDeleteBuffers(1, &vbo);
+	/* Delete vertex arrays */
+	glDeleteVertexArrays(1, &vao);
+
+	/* Kill window and return 0 */
     glfwTerminate();
     return 0;
 }

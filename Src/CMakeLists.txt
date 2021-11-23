@@ -5,8 +5,18 @@ list(APPEND SPN_MAIN
 	#Headers
 	"Main.hpp"
 )
+list(APPEND SPN_CPP
+	"Window_OGL.cpp"
+)
+list(APPEND SPN_HPP
+	"Window_OGL.hpp"
+)
 
-source_group("" FILES ${SPN_MAIN})
+source_group("" FILES
+	${SPN_MAIN}
+	${SPN_CPP}
+	${SPN_HPP}
+)
 
 #Main CMake
 
@@ -17,6 +27,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} 
 	${OPENGL_LIBRARIES}
 	glfw
+	GLEW
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
