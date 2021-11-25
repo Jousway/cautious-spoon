@@ -1,5 +1,4 @@
 #include "Main.hpp"
-#include "Graphics.hpp"
 
 /* Vertex shader */
 const GLchar* vertSrc = R"glsl(
@@ -42,7 +41,7 @@ int main(int argc, char* argv[])
 
     /* Load Test Model */
 	/*
-    bool ret = loader.LoadASCIIFromFile(&model, &err, &warn, "Test.gltf");
+    bool ret = GLTFLoader.LoadASCIIFromFile(&model, &err, &warn, "Test.gltf");
 
     if (!warn.empty()) {
         printf("Warn: %s\n", warn.c_str());
@@ -66,27 +65,6 @@ int main(int argc, char* argv[])
 	display.Generate(vao, vbo, ebo);
 
 
-	/* Set up vertices */
-	/*
-	std::vector<float> vertices = {
-		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
-		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 1.0f, 1.0f, 1.0f
-	};
-	display.Buffer(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-	*/
-
-	/* Set up elements */
-	/*
-	std::vector<GLuint> elements = {
-		0, 1, 2,
-		2, 3, 0
-	};
-	display.Buffer(GL_ELEMENT_ARRAY_BUFFER, elements, GL_STATIC_DRAW);
-	*/
-
-
 	display.GenQuad("ID1", 200, 200, 200, 200);
 	display.GenQuad("ID2", -200, -200, 200, 200);
 	display.GenQuad("ID3", 200, -200, 200, 200);
@@ -94,6 +72,7 @@ int main(int argc, char* argv[])
 	display.Quads["ID1"].Diffuse({ 1.f,0.f,0.f });
 	display.Quads["ID3"].Diffuse({ 0.f,1.f,0.f });
 	display.Quads["ID4"].Diffuse({ 0.f,0.f,1.f });
+	display.Quads["ID1"].LocX += 0.2f;
 
 
 	/* Create and compile shaders */
@@ -140,6 +119,7 @@ int main(int argc, char* argv[])
 		/* i did it dad */
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+		/* Update Graphics */
 		display.Update();
 
         /* Swap front and back buffers */

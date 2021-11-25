@@ -1,6 +1,5 @@
 #include "Graphics.hpp"
 
-
 GLFWwindow* Graphics::Initialize(int width, int height, const char* title, GLFWmonitor* monitor) {
 	ScreenWidth = static_cast<float>(width);
 	ScreenHeight = static_cast<float>(height);
@@ -31,7 +30,6 @@ void Graphics::Generate(GLuint vao, GLuint vbo, GLuint ebo) {
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 }
-
 GLuint Graphics::CreateShader(GLenum shaderType, const GLchar* source) {
 	GLuint shader = glCreateShader(shaderType);
 	glShaderSource(shader, 1, &source, NULL);
@@ -107,4 +105,11 @@ void Graphics::Update()
 		Buffer(GL_ELEMENT_ARRAY_BUFFER, elems, GL_STREAM_DRAW);
 		glDrawElements(GL_TRIANGLES, elems.size() * sizeof(GLuint), GL_UNSIGNED_INT, 0);
 	}
+	/*
+	for (auto& model : Models)
+	{
+		auto& M = model.second;
+		M.Draw();
+	}
+	*/
 }
