@@ -4,6 +4,12 @@ Build/*
 # Thanks, VSCode.
 .vscode
 
+# Thanks, VS2022.
+.vs
+out
+CMakeSettings.json
+SPOON.ilk
+
 #windows
 SPOON.exe
 SPOON.pdb
