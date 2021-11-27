@@ -6,9 +6,12 @@ const GLchar* vertSrc = R"glsl(
 	#version 150 core
 	in vec2 position;
 	in vec3 color;
+	in vec2 texcoord;
 	out vec3 Color;
+	out vec2 TexCoord;
 	void main() {
 		Color = color;
+		TexCoord = texcoord;
 		gl_Position = vec4(position, 0.0, 1.0);
 	}
 )glsl";
@@ -16,11 +19,13 @@ const GLchar* vertSrc = R"glsl(
 const GLchar* fragSrc = R"glsl(
 	#version 150 core
 	in vec3 Color;
+	in vec2 TexCoord;
 	out vec4 outColor;
+	uniform sampler2D tex;
 	uniform float time;
 	void main() {
 		float col = (sin(time * 4.0) + 1.0) / 2.0;
-		outColor = vec4(Color * col, 1.0);
+		outColor = texture2D(tex, TexCoord) * vec4(Color * col, 1.0);
 	}
 )glsl";
 
@@ -85,6 +90,31 @@ int main(int argc, char* argv[])
 	};
 	display.Buffer(GL_ELEMENT_ARRAY_BUFFER, elements, GL_STATIC_DRAW);
 	*/
+	
+
+	GLuint tex;
+	glGenTextures(1, &tex);
+	glBindTexture(GL_TEXTURE_2D, tex);
+	int texWidth, texHeight, nrChan;
+	GLubyte* data = stbi_load("test.png", &texWidth, &texHeight, &nrChan, 0);
+	if (data) {
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RGB,
+			texWidth,
+			texHeight,
+			0,
+			GL_RGB,
+			GL_UNSIGNED_BYTE,
+			data
+		);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else {
+		printf("nope no image here dummy\n");
+	}
+	stbi_image_free(data);
 
 
 	display.GenQuad("ID1", 200, 200, 200, 200);
@@ -107,12 +137,17 @@ int main(int argc, char* argv[])
 	/* Vert shader position */
 	GLint posAttrib = glGetAttribLocation(shaderProg, "position");
 	glEnableVertexAttribArray(posAttrib);
-	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), 0);
 
 	/* Vert shader color */
 	GLint colAttrib = glGetAttribLocation(shaderProg, "color");
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(2 * sizeof(float)));
+
+	/* Texture coordinate */
+	GLint texAttrib = glGetAttribLocation(shaderProg, "texcoord");
+	glEnableVertexAttribArray(texAttrib);
+	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(5 * sizeof(float)));
 
 	/* Uniform time */
 	auto t_start = std::chrono::steady_clock::now();
@@ -139,6 +174,7 @@ int main(int argc, char* argv[])
 
 		/* i did it dad */
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindTexture(GL_TEXTURE_2D, tex);
 
 		display.Update();
 
@@ -149,6 +185,7 @@ int main(int argc, char* argv[])
 		display.PollEvents();
     }
 
+	glDeleteTextures(1, &tex);
 	display.Destroy();
     return 0;
 }

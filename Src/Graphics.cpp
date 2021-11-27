@@ -88,16 +88,21 @@ void Graphics::GenQuad(std::string Name, int X, int Y, int W, int H)
 	Quads.insert(std::make_pair(Name,Quad(X, Y, W, H)));
 }
 
+void Graphics::GenSprite(std::string Name, int X, int Y, int W, int H, std::string path)
+{
+	Sprites.insert(std::make_pair(Name, Sprite(X, Y, W, H, path)));
+}
+
 void Graphics::Update()
 {
 	for (auto& quad : Quads)
 	{
 		auto& Q = quad.second;
 		std::vector<float> verts = {
-			(-Q.Width + Q.LocX)/ScreenWidth, (-Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2],
-			(Q.Width + Q.LocX)/ScreenWidth, (-Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2],
-			(Q.Width + Q.LocX)/ScreenWidth, (Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2],
-			(-Q.Width + Q.LocX)/ScreenWidth, (Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2]
+			(-Q.Width + Q.LocX)/ScreenWidth, (-Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2], 0.0f, 1.0f,
+			(Q.Width + Q.LocX)/ScreenWidth, (-Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2], 1.0f, 1.0f,
+			(Q.Width + Q.LocX)/ScreenWidth, (Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2], 1.0f, 0.0f,
+			(-Q.Width + Q.LocX)/ScreenWidth, (Q.Height + Q.LocY)/ScreenHeight, Q.Colours[0], Q.Colours[1], Q.Colours[2], 0.0f, 0.0f,
 		};
 		Buffer(GL_ARRAY_BUFFER, verts, GL_STREAM_DRAW);
 		std::vector<GLuint> elems = {
