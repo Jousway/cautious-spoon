@@ -96,8 +96,25 @@ int main(int argc, char* argv[])
 	glGenTextures(1, &tex);
 	glBindTexture(GL_TEXTURE_2D, tex);
 	int texWidth, texHeight, nrChan;
+	std::vector<float> backup = {
+		1.0f, 1.0f, 1.0f,	1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,	1.0f, 1.0f, 1.0f
+	};
 	GLubyte* data = stbi_load("test.png", &texWidth, &texHeight, &nrChan, 0);
-	if (data) {
+	if (!data) {
+		printf("nope no image here dummy\n");
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RGB,
+			2,
+			2,
+			0,
+			GL_RGB,
+			GL_FLOAT,
+			backup.data()
+		);
+	} else {
 		glTexImage2D(
 			GL_TEXTURE_2D,
 			0,
@@ -109,11 +126,8 @@ int main(int argc, char* argv[])
 			GL_UNSIGNED_BYTE,
 			data
 		);
-		glGenerateMipmap(GL_TEXTURE_2D);
 	}
-	else {
-		printf("nope no image here dummy\n");
-	}
+	glGenerateMipmap(GL_TEXTURE_2D);
 	stbi_image_free(data);
 
 
