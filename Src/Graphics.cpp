@@ -105,6 +105,6 @@ void Graphics::Update()
 			2, 3, 0
 		};
 		Buffer(GL_ELEMENT_ARRAY_BUFFER, elems, GL_STREAM_DRAW);
-		glDrawElements(GL_TRIANGLES, elems.size() * sizeof(GLuint), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, (GLsizei)(elems.size() * sizeof(GLuint)), GL_UNSIGNED_INT, 0);
 	}
 }

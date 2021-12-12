@@ -36,7 +36,6 @@ class Graphics {
 
 		template<class A>
 		void Buffer(int Type, std::vector<A> input, GLenum drawType) {
-			//printf("SIZE: %i\n", static_cast<int>(input.size() * sizeof(A)));
 			glBufferData(Type, input.size() * sizeof(A), input.data(), drawType);
 		}
 
