@@ -1,9 +1,13 @@
 list(APPEND SPN_MAIN
 	#Source
 	"Main.cpp"
+	"Quad.cpp"
+	"Settings.cpp"
 
 	#Headers
 	"Main.hpp"
+	"Quad.hpp"
+	"Settings.hpp"
 )
 
 source_group("" FILES ${SPN_MAIN})

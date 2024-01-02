@@ -1,9 +1,12 @@
 Build/*
 !Build/RunCmakeHere
+out/*
+.vs/
 
 #windows
 SPOON.exe
 SPOON.pdb
+SPOON.ilk
 
 #linux
 SPOON
